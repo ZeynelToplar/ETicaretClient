@@ -32,14 +32,14 @@ export class ListComponent extends BaseComponent implements OnInit{
 
   async getProducts() {
     this.ShowSpinner(SpinnerType.Timer);
-    const allProducts: { totalCount: number, products: List_Product[] } = await this.productService.read(this
+    const allProducts: { totalProductCount: number, products: List_Product[] } = await this.productService.read(this
       .paginator ? this.paginator.pageIndex : 0, this.paginator ?  this.paginator.pageSize : 5, () => this.HideSpinner(SpinnerType.Timer), errorMessage => this.alertify.message(errorMessage, {
       dismissOthers: true,
       messageType: MessageType.Error,
       position: Position.TopRight
       }));
     this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
-    this.paginator.length = allProducts.totalCount;
+    this.paginator.length = allProducts.totalProductCount;
   }
 
   async pageChanged() {

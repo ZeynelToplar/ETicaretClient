@@ -1,16 +1,24 @@
 <div class="row">
   <div class="col-md-3"></div>
   <div class="col-md-6">
-      <div class="mb-3">
-        <label for="username" class="form-label">Kullanıcı Adı</label>
-        <input #txtUsernameOrEmail type="text" class="form-control" id="username" placeholder="Ad Soyad & Email" formControlName="nameSurname">
-        <div class="form-text">***</div>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Şifre</label>
-        <input #txtPassword type="password" class="form-control" id="password" placeholder="Şifre" formControlName="password">
-      </div>
-      <button type="submit" class="btn btn-primary" (click)="login(txtUsernameOrEmail.value,txtPassword.value)">Giriş Yap</button>
+    <div class="mb-3">
+      <label for="username" class="form-label">Kullanıcı Adı</label>
+      <input #txtUsernameOrEmail type="text" class="form-control" id="username" placeholder="Ad Soyad & Email" formControlName="nameSurname">
+      <div class="form-text">***</div>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Şifre</label>
+      <input #txtPassword type="password" class="form-control" id="password" placeholder="Şifre" formControlName="password">
+    </div>
+
+    <div style="display:flex;">
+      <asl-google-signin-button></asl-google-signin-button>
+      <img src="../../../assets/facebook.png" style="width:30px; height:30px;cursor:pointer;" (click)="facebookLogin()" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" (click)="login(txtUsernameOrEmail.value,txtPassword.value)">Giriş Yap</button>
+    <a style="margin-left:5px;" routerLink="/password-reset" class="btn btn-secondary">Şifremi Unuttum</a>
+
   </div>
   <div class="col-md-3"></div>
 </div>

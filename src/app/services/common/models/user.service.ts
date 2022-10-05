@@ -1,3 +1,4 @@
+import { SocialUser } from '@abacritt/angularx-social-login';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Token } from '../../../contracts/Token/token';
@@ -23,21 +24,19 @@ export class UserService {
     return await firstValueFrom(observable) as Create_User;
   }
 
-  async login(usernameOrEmail: string, password: string, callBackFunction?: () => void): Promise<any> {
-    const observable: Observable<any | TokenResponse> = this.httpClientService.post<any | TokenResponse>({
+  async updatePassword(userId: string, resetToken: string, password: string, passwordConfirm: string, successCallBackFunction?: () => void, errorCallBackFunction?: (error) => void) {
+    const observable: Observable<any> = this.httpClientService.post({
       controller: "users",
-      action: "login"
-    }, { usernameOrEmail, password })
+      action: "update-password"
+    }, {
+      userId: userId,
+      resetToken: resetToken,
+      password: password,
+      passwordConfirm: passwordConfirm
+    });
 
-    const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
-    if (tokenResponse) {
-      localStorage.setItem("accessToken", tokenResponse.token.accessToken);
-      this.toastrService.message("Kullanıcı girişi başarıyla sağlanmıştır.", "Giriş Başarılı", {
-        messageType: ToastrMessageType.Success,
-        position: ToastrPosition.TopRight
-      });
-    }
-      
-    callBackFunction();
+    const promiseData: Promise<any> = await firstValueFrom(observable);
+    promiseData.then(value => successCallBackFunction()).catch(error => errorCallBackFunction(error));
+    await promiseData;
   }
 }
