@@ -51,6 +51,7 @@ export class UpdatePasswordComponent extends BaseComponent implements OnInit {
         const resetToken: string = params["resetToken"];
         await this.userService.updatePassword(userId, resetToken, password, passwordConfirm,
           () => {
+            debugger;
             this.alertifyService.message("Şifre başarıyla güncellenmiştir", {
               messageType: MessageType.Success,
               position: Position.TopRight
