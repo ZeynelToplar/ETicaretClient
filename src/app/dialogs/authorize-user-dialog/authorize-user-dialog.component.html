@@ -1,10 +1,10 @@
-<h1 mat-dialog-title matBadge="{{_roles.selectedOptions.selected.length}}/{{roles.totalCount}}" matBadgeOverlap="false">{{data.name}} Enpointine Rol Atama</h1>
+<h1 mat-dialog-title matBadge="{{_roles.selectedOptions.selected.length}}/{{roles.totalCount}}" matBadgeOverlap="false">Kullanıcıya Rol Atama</h1>
 <div mat-dialog-content>
-  <p>İlgili sayfaya aşağıdan rolleri atayabilirsiniz.</p>
+  <p>İlgili kullanıcıya aşağıdan rolleri atayabilirsiniz.</p>
 </div>
 
 <mat-selection-list #_roles>
-  <mat-list-option *ngFor="let role of listRoles" selected ="{{role.selected}}">
+  <mat-list-option *ngFor="let role of listRoles" selected="{{role.selected}}">
     {{role.name}}
   </mat-list-option>
 </mat-selection-list>

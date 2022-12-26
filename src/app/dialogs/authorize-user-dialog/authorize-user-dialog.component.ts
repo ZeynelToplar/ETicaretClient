@@ -5,21 +5,21 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { SpinnerType } from '../../base/base.component';
 import { List_Role } from '../../contracts/Role/list_role';
 import { AlertifyService, MessageType, Position } from '../../services/admin/alertify.service';
-import { AuthorizationEndpointService } from '../../services/common/models/authorization-endpoint.service';
 import { RoleService } from '../../services/common/models/role.service';
+import { UserService } from '../../services/common/models/user.service';
 import { BaseDialog } from '../base/base-dialog';
 
 @Component({
-  selector: 'app-authorize-menu-dialog',
-  templateUrl: './authorize-menu-dialog.component.html',
-  styleUrls: ['./authorize-menu-dialog.component.scss']
+  selector: 'app-authorize-user-dialog',
+  templateUrl: './authorize-user-dialog.component.html',
+  styleUrls: ['./authorize-user-dialog.component.scss']
 })
-export class AuthorizeMenuDialogComponent extends BaseDialog<AuthorizeMenuDialogComponent> implements OnInit {
+export class AuthorizeUserDialogComponent extends BaseDialog<AuthorizeUserDialogComponent> implements OnInit {
 
-  constructor(dialogRef: MatDialogRef<AuthorizeMenuDialogComponent>,
+  constructor(dialogRef: MatDialogRef<AuthorizeUserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private roleService: RoleService,
-    private authEndpointService: AuthorizationEndpointService,
+    private userService: UserService,
     private spinner: NgxSpinnerService,
     private alertify: AlertifyService) {
     super(dialogRef)
@@ -29,9 +29,12 @@ export class AuthorizeMenuDialogComponent extends BaseDialog<AuthorizeMenuDialog
   assignedRoles: string[];
   listRoles: { name: string, selected: boolean }[];
   async ngOnInit() {
-    this.assignedRoles = await this.authEndpointService.getRolesToEndpoint(this.data.code, this.data.menuName);
+    this.spinner.show(SpinnerType.Timer)
+    this.assignedRoles = await this.userService.getRolesToUser(this.data, () => {
+      this.spinner.hide(SpinnerType.Timer)
+    });
     this.roles = await this.roleService.getRoles(-1, -1);
-    this.listRoles = this.roles.datas.map((r : any)=> {
+    this.listRoles = this.roles.datas.map((r: any) => {
 
       return {
         name: r.name,
@@ -43,21 +46,19 @@ export class AuthorizeMenuDialogComponent extends BaseDialog<AuthorizeMenuDialog
   assignRoles(_roles: MatSelectionList) {
     const roles: string[] = _roles.selectedOptions.selected.map(o => o._text.nativeElement.innerText);
     this.spinner.show(SpinnerType.Timer);
-    this.authEndpointService.assignRoleEndpoint(roles, this.data.code, this.data.menuName,
+    this.userService.assignRoleToUser(this.data, roles,
       () => {
         this.spinner.hide(SpinnerType.Timer);
         this.alertify.message("Rol atama işlemi başarılı", {
           messageType: MessageType.Success,
           position: Position.TopRight
         })
-      },
-      error => {
-
-    })
+      }, error => {
+        this.alertify.message("Rol atama işlemi başarısız", {
+          messageType: MessageType.Error,
+          position: Position.TopRight
+        })
+      });
   }
 }
 
-export enum AuthorizeMenuState {
-  Yes,
-  No
-}
